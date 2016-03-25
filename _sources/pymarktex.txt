@@ -1,0 +1,17 @@
+pymarktex package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pymarktex.figures
+
+Module contents
+---------------
+
+.. automodule:: pymarktex
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,10 @@
+pymarktex.figures package
+=========================
+
+Module contents
+---------------
+
+.. automodule:: pymarktex.figures
+    :members:
+    :undoc-members:
+    :show-inheritance:

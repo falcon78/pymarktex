@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymarktex &mdash; pymarktex  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="pymarktex  documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pymarktex</h1><div class="highlight"><pre>
+<span></span><span class="n">b</span><span class="s2">&quot;&quot;&quot;This module needs Python 2.7.x&quot;&quot;&quot;</span>
+
+<span class="c1"># Special variables #</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0.4&#39;</span>
+
+<span class="c1"># Built-in modules #</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">tempfile</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">codecs</span>
+
+<span class="c1"># Third party modules #</span>
+<span class="kn">import</span> <span class="nn">sh</span><span class="o">,</span> <span class="nn">pystache</span>
+
+<span class="c1"># Get paths to module #</span>
+<span class="bp">self</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+<span class="n">module_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+<span class="n">repos_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">module_dir</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+
+<span class="c1"># Various paths #</span>
+<span class="n">logo_dir</span> <span class="o">=</span> <span class="n">repos_dir</span> <span class="o">+</span> <span class="s1">&#39;logos/&#39;</span>
+<span class="n">template_dir</span> <span class="o">=</span> <span class="n">repos_dir</span> <span class="o">+</span> <span class="s1">&#39;templates/&#39;</span>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="Document"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document">[docs]</a><span class="k">class</span> <span class="nc">Document</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The main object is the document to be generated from markdown text.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1"> object on </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_path</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="c1"># Input #</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_path</span> <span class="o">=</span> <span class="n">input_path</span>
+        <span class="c1"># Output #</span>
+        <span class="k">if</span> <span class="n">output_path</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_output_name</span>
+        <span class="k">if</span> <span class="n">output_path</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span>        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER_FULL_NAME&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;status&#39;</span><span class="p">:</span>      <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER_STATUS&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;company&#39;</span><span class="p">:</span>     <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER_COMPANY&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;subcompany&#39;</span><span class="p">:</span>  <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER_SUBCOMPANY&#39;</span><span class="p">),</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span>       <span class="s2">&quot;Auto-generated report&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;image_left&#39;</span><span class="p">:</span>  <span class="n">logo_dir</span> <span class="o">+</span> <span class="s1">&#39;ebc.png&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;image_right&#39;</span><span class="p">:</span> <span class="n">logo_dir</span> <span class="o">+</span> <span class="s1">&#39;uu.png&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_output_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span>
+
+<div class="viewcode-block" id="Document.load_markdown"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.load_markdown">[docs]</a>    <span class="k">def</span> <span class="nf">load_markdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load file in memory and separate the options and body&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_path</span><span class="p">):</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No file at </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">markdown</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\A---(.+?)---(.+)&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="o">|</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Parse the options #</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[::</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">k</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Document.make_body"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.make_body">[docs]</a>    <span class="k">def</span> <span class="nf">make_body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the body to LaTeX&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">pandoc</span><span class="p">(</span><span class="n">_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">markdown</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">),</span> <span class="n">read</span><span class="o">=</span><span class="s1">&#39;markdown&#39;</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="s1">&#39;latex&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Document.make_latex"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.make_latex">[docs]</a>    <span class="k">def</span> <span class="nf">make_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the header and footer&quot;&quot;&quot;</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">:</span> <span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">HeaderTemplate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">footer</span> <span class="o">=</span> <span class="n">FooterTemplate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latex</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">footer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Document.make_pdf"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.make_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">make_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Call XeLaTeX (twice for cross-referencing)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span>  <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">+</span> <span class="s1">&#39;main.tex&#39;</span>
+        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span> <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">latex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;--interaction=nonstopmode&quot;</span><span class="p">,</span> <span class="s1">&#39;-output-directory&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_path</span><span class="p">]</span>
+        <span class="n">sh</span><span class="o">.</span><span class="n">xelatex</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">_ok_code</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">safe</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">sh</span><span class="o">.</span><span class="n">xelatex</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">_ok_code</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">safe</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># Move into place #</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">+</span> <span class="s1">&#39;main.pdf&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Document.generate"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_markdown</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_body</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_latex</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make_pdf</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Document.web_export"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Document.web_export">[docs]</a>    <span class="k">def</span> <span class="nf">web_export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Copy the report to the webexport directory where it can be viewed by anyone&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">web_location</span><span class="o">.</span><span class="n">directory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">safe</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_location</span><span class="p">)</span></div></div>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="Template"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Template">[docs]</a><span class="k">class</span> <span class="nc">Template</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The template base class&quot;&quot;&quot;</span>
+    <span class="n">delimiters</span> <span class="o">=</span> <span class="p">(</span><span class="s1">u&#39;@@[&#39;</span><span class="p">,</span> <span class="s1">u&#39;]@@&#39;</span><span class="p">)</span>
+    <span class="n">escape</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="n">u</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1"> object on </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span> <span class="k">if</span> <span class="n">options</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">delimiters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Template.render"><a class="viewcode-back" href="../pymarktex.html#pymarktex.Template.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">escape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">delimiters</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">escape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">escape</span><span class="p">()</span> <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">escape</span>
+        <span class="n">delimiters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delimiters</span> <span class="k">if</span> <span class="n">delimiters</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">delimiters</span>
+        <span class="n">pystache</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">DELIMITERS</span> <span class="o">=</span> <span class="n">delimiters</span>
+        <span class="n">renderer</span> <span class="o">=</span> <span class="n">pystache</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">escape</span><span class="o">=</span><span class="n">escape</span><span class="p">,</span> <span class="n">search_dirs</span><span class="o">=</span><span class="n">template_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="HeaderTemplate"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate">[docs]</a><span class="k">class</span> <span class="nc">HeaderTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;All the parameters to be rendered in the LaTeX header template&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HeaderTemplate.name"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.status"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.status">[docs]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.company"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.company">[docs]</a>    <span class="k">def</span> <span class="nf">company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;company&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.subcompany"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.subcompany">[docs]</a>    <span class="k">def</span> <span class="nf">subcompany</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subcompany&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.title"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.title">[docs]</a>    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.image_left"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.image_left">[docs]</a>    <span class="k">def</span> <span class="nf">image_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;image_left&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="HeaderTemplate.image_right"><a class="viewcode-back" href="../pymarktex.html#pymarktex.HeaderTemplate.image_right">[docs]</a>    <span class="k">def</span> <span class="nf">image_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;image_right&#39;</span><span class="p">)</span></div></div>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="FooterTemplate"><a class="viewcode-back" href="../pymarktex.html#pymarktex.FooterTemplate">[docs]</a><span class="k">class</span> <span class="nc">FooterTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;All the parameters to be rendered in the LaTeX footer template&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

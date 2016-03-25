@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymarktex package &mdash; pymarktex  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pymarktex  documentation" href="index.html" />
+    <link rel="next" title="pymarktex.figures package" href="pymarktex.figures.html" />
+    <link rel="prev" title="Welcome to pymarktex’s documentation!" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pymarktex-package">
+<h1>pymarktex package<a class="headerlink" href="#pymarktex-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pymarktex.figures.html">pymarktex.figures package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pymarktex.figures.html#module-pymarktex.figures">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-pymarktex">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pymarktex" title="Permalink to this headline">¶</a></h2>
+<p>This module needs Python 2.7.x</p>
+<dl class="class">
+<dt id="pymarktex.Document">
+<em class="property">class </em><code class="descclassname">pymarktex.</code><code class="descname">Document</code><span class="sig-paren">(</span><em>input_path</em>, <em>output_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The main object is the document to be generated from markdown text.</p>
+<dl class="attribute">
+<dt id="pymarktex.Document.default_options">
+<code class="descname">default_options</code><a class="headerlink" href="#pymarktex.Document.default_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pymarktex.Document.default_output_name">
+<code class="descname">default_output_name</code><a class="headerlink" href="#pymarktex.Document.default_output_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.generate">
+<code class="descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.load_markdown">
+<code class="descname">load_markdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.load_markdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.load_markdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load file in memory and separate the options and body</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.make_body">
+<code class="descname">make_body</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.make_body"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.make_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the body to LaTeX</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.make_latex">
+<code class="descname">make_latex</code><span class="sig-paren">(</span><em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.make_latex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.make_latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the header and footer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.make_pdf">
+<code class="descname">make_pdf</code><span class="sig-paren">(</span><em>safe=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.make_pdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.make_pdf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call XeLaTeX (twice for cross-referencing)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Document.web_export">
+<code class="descname">web_export</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Document.web_export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Document.web_export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the report to the webexport directory where it can be viewed by anyone</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pymarktex.FooterTemplate">
+<em class="property">class </em><code class="descclassname">pymarktex.</code><code class="descname">FooterTemplate</code><span class="sig-paren">(</span><em>options=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#FooterTemplate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.FooterTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymarktex.Template" title="pymarktex.Template"><code class="xref py py-class docutils literal"><span class="pre">pymarktex.Template</span></code></a></p>
+<p>All the parameters to be rendered in the LaTeX footer template</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pymarktex.HeaderTemplate">
+<em class="property">class </em><code class="descclassname">pymarktex.</code><code class="descname">HeaderTemplate</code><span class="sig-paren">(</span><em>options=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymarktex.Template" title="pymarktex.Template"><code class="xref py py-class docutils literal"><span class="pre">pymarktex.Template</span></code></a></p>
+<p>All the parameters to be rendered in the LaTeX header template</p>
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.company">
+<code class="descname">company</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.company"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.company" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.image_left">
+<code class="descname">image_left</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.image_left"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.image_left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.image_right">
+<code class="descname">image_right</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.image_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.image_right" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.status">
+<code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.subcompany">
+<code class="descname">subcompany</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.subcompany"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.subcompany" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.HeaderTemplate.title">
+<code class="descname">title</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#HeaderTemplate.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.HeaderTemplate.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pymarktex.Template">
+<em class="property">class </em><code class="descclassname">pymarktex.</code><code class="descname">Template</code><span class="sig-paren">(</span><em>options=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The template base class</p>
+<dl class="attribute">
+<dt id="pymarktex.Template.delimiters">
+<code class="descname">delimiters</code><em class="property"> = (u'&#64;&#64;[', u']&#64;&#64;')</em><a class="headerlink" href="#pymarktex.Template.delimiters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Template.escape">
+<code class="descname">escape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymarktex.Template.escape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pymarktex.Template.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>escape=None</em>, <em>delimiters=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymarktex.html#Template.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymarktex.Template.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pymarktex package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#module-pymarktex">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pymarktex&#8217;s documentation!</a></li>
+      <li>Next: <a href="pymarktex.figures.html" title="next chapter">pymarktex.figures package</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pymarktex.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/pymarktex.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

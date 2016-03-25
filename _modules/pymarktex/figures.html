@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymarktex.figures &mdash; pymarktex  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pymarktex  documentation" href="../../index.html" />
+    <link rel="up" title="pymarktex" href="../pymarktex.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pymarktex.figures</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Futures #</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="c1"># Built-in modules #</span>
+
+<span class="c1"># Internal modules #</span>
+<span class="kn">from</span> <span class="nn">pymarktex</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span> <span class="nn">plumbing.autopaths</span> <span class="kn">import</span> <span class="n">FilePath</span>
+
+<span class="c1"># Third party modules #</span>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="LatexFigure"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.LatexFigure">[docs]</a><span class="k">class</span> <span class="nc">LatexFigure</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+<div class="viewcode-block" id="LatexFigure.escape_underscore"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.LatexFigure.escape_underscore">[docs]</a>    <span class="k">def</span> <span class="nf">escape_underscore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span> <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;\_&#39;</span><span class="p">)</span></div></div>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="ScaledFigure"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.ScaledFigure">[docs]</a><span class="k">class</span> <span class="nc">ScaledFigure</span><span class="p">(</span><span class="n">LatexFigure</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A figure in latex code which can have its size adjusted&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1"> object on </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Attributes #</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span>    <span class="o">=</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">escape_underscore</span><span class="p">(</span><span class="n">caption</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span>   <span class="o">=</span> <span class="s2">r&quot;\label{&quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span>  <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="c1"># Checks #</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No file at &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t have several extension in a LaTeX figure file name.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ScaledFigure.path"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.ScaledFigure.path">[docs]</a>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span></div>
+<div class="viewcode-block" id="ScaledFigure.caption"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.ScaledFigure.caption">[docs]</a>    <span class="k">def</span> <span class="nf">caption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span></div>
+<div class="viewcode-block" id="ScaledFigure.label"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.ScaledFigure.label">[docs]</a>    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span></div>
+<div class="viewcode-block" id="ScaledFigure.graph_params"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.ScaledFigure.graph_params">[docs]</a>    <span class="k">def</span> <span class="nf">graph_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">params</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;keepaspectratio&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></div></div>
+
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="DualFigure"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure">[docs]</a><span class="k">class</span> <span class="nc">DualFigure</span><span class="p">(</span><span class="n">LatexFigure</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A figure in latex code which has two subfigures&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1"> object on </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_one</span><span class="p">,</span> <span class="n">path_two</span><span class="p">,</span> <span class="n">caption_one</span><span class="p">,</span> <span class="n">caption_two</span><span class="p">,</span> <span class="n">label_one</span><span class="p">,</span> <span class="n">label_two</span><span class="p">,</span> <span class="n">caption_main</span><span class="p">,</span> <span class="n">label_main</span><span class="p">):</span>
+        <span class="c1"># Attributes #</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_one</span><span class="p">,</span>    <span class="bp">self</span><span class="o">.</span><span class="n">path_two</span>    <span class="o">=</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">path_one</span><span class="p">),</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">path_two</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">caption_one</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_two</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">escape_underscore</span><span class="p">,</span> <span class="p">(</span><span class="n">caption_one</span><span class="p">,</span> <span class="n">caption_two</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">caption_main</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">escape_underscore</span><span class="p">(</span><span class="n">caption_main</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_one</span>    <span class="o">=</span> <span class="s2">r&quot;\label{&quot;</span> <span class="o">+</span> <span class="n">label_one</span> <span class="o">+</span> <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">label_one</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_two</span>    <span class="o">=</span> <span class="s2">r&quot;\label{&quot;</span> <span class="o">+</span> <span class="n">label_two</span> <span class="o">+</span> <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">label_two</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_main</span>   <span class="o">=</span> <span class="s2">r&quot;\label{&quot;</span> <span class="o">+</span> <span class="n">label_main</span> <span class="o">+</span> <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">label_main</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="c1"># Check #</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_one</span><span class="o">.</span><span class="n">exists</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_two</span><span class="o">.</span><span class="n">exists</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;File missing.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_one</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_two</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t have several extension in a LaTeX figure file name.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DualFigure.path_one"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.path_one">[docs]</a>    <span class="k">def</span> <span class="nf">path_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_one</span></div>
+<div class="viewcode-block" id="DualFigure.path_two"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.path_two">[docs]</a>    <span class="k">def</span> <span class="nf">path_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_two</span></div>
+<div class="viewcode-block" id="DualFigure.caption_one"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.caption_one">[docs]</a>    <span class="k">def</span> <span class="nf">caption_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_one</span></div>
+<div class="viewcode-block" id="DualFigure.caption_two"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.caption_two">[docs]</a>    <span class="k">def</span> <span class="nf">caption_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_two</span></div>
+<div class="viewcode-block" id="DualFigure.label_one"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.label_one">[docs]</a>    <span class="k">def</span> <span class="nf">label_one</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_one</span></div>
+<div class="viewcode-block" id="DualFigure.label_two"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.label_two">[docs]</a>    <span class="k">def</span> <span class="nf">label_two</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_two</span></div>
+<div class="viewcode-block" id="DualFigure.caption_main"><a class="viewcode-back" href="../../pymarktex.figures.html#pymarktex.figures.DualFigure.caption_main">[docs]</a>    <span class="k">def</span> <span class="nf">caption_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption_main</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../pymarktex.html">pymarktex</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
